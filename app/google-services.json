@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "825455452301",
+    "project_id": "ratemyplate-6cab6",
+    "storage_bucket": "ratemyplate-6cab6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:825455452301:android:1482ec031ca934e9fa42c4",
+        "android_client_info": {
+          "package_name": "com.example.rate_my_plate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATd-WlnvFrcFmJ2XMtS3UOG1FvjNcdX9s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
