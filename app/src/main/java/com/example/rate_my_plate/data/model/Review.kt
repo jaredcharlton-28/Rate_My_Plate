@@ -1,4 +1,4 @@
-package com.ratemyplate.data.model
+package com.example.rate_my_plate.data.model
 
 data class Review(
     val id: String? = null,
@@ -8,5 +8,5 @@ data class Review(
     val rating: Float,
     val comment: String,
     val imageUrl: String? = null,
-    val ownerResponse: String=null
+    val ownerResponse: String? = null   // <- must be nullable (you use isNullOrEmpty())
 )

@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.rate_my_plate">
-
     <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -14,29 +13,37 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.RateMyPlate">
-
-        <!-- Business List Activity -->
+        android:theme="@style/Theme.RateMyPlate"
+        android:usesCleartextTraffic="true">
         <activity
-            android:name=".BusinessListActivity"
+            android:name=".ui.business.AddRestaurantActivity"
             android:exported="false"
+            android:label="@string/title_activity_add_restaurant"
             android:theme="@style/Theme.RateMyPlate" />
-
-        <!-- Settings Activity -->
+        <activity
+            android:name=".ui.review.WriteReviewActivity"
+            android:exported="false"
+            android:label="@string/title_activity_write_review"
+            android:theme="@style/Theme.RateMyPlate" />
+        <activity
+            android:name=".ui.review.ReviewsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_review"
+            android:theme="@style/Theme.RateMyPlate" /> <!-- Business List Activity -->
+        <activity
+            android:name=".ui.business.BusinessListActivity"
+            android:exported="false"
+            android:theme="@style/Theme.RateMyPlate" /> <!-- Settings Activity -->
         <activity
             android:name=".SettingsActivity"
             android:exported="false"
             android:label="@string/title_activity_settings"
-            android:theme="@style/Theme.RateMyPlate" />
-
-        <!-- Login Activity -->
+            android:theme="@style/Theme.RateMyPlate" /> <!-- Login Activity -->
         <activity
             android:name=".LoginActivity"
             android:exported="false"
             android:label="@string/title_activity_login"
-            android:theme="@style/Theme.RateMyPlate" />
-
-        <!-- Main Activity (Launcher) -->
+            android:theme="@style/Theme.RateMyPlate" /> <!-- Main Activity (Launcher) -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -44,10 +51,10 @@
             android:theme="@style/Theme.RateMyPlate">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>
