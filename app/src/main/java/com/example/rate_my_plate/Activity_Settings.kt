@@ -7,10 +7,13 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.rate_my_plate.databinding.ActivitySettingBinding
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.Date
 
 class SettingsActivity : AppCompatActivity() {
@@ -18,7 +21,7 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingBinding
     private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
 
-    // simple local prefs for notification + language
+    // simple local prefs for notification + (legacy) settings
     private val prefs by lazy { getSharedPreferences("user_settings", MODE_PRIVATE) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +47,10 @@ class SettingsActivity : AppCompatActivity() {
 
         binding.tvUid.text = getString(R.string.uid_fmt, user.uid)
         binding.tvEmail.text = getString(R.string.email_fmt, user.email ?: "—")
-        binding.tvVerified.text = getString(R.string.verified_fmt, if (user.isEmailVerified) "Yes" else "No")
+        binding.tvVerified.text = getString(
+            R.string.verified_fmt,
+            if (user.isEmailVerified) "Yes" else "No"
+        )
         binding.tvCreated.text = getString(R.string.created_fmt, formatTs(created))
         binding.tvLastSignIn.text = getString(R.string.last_signin_fmt, formatTs(lastSignIn))
 
@@ -58,10 +64,12 @@ class SettingsActivity : AppCompatActivity() {
                     binding.tilNewEmail.error = "Enter a valid email"
                     return@setOnClickListener
                 }
+
                 password.length < 6 -> {
                     binding.tilPassword.error = "Enter your current password"
                     return@setOnClickListener
                 }
+
                 else -> {
                     binding.tilNewEmail.error = null
                     binding.tilPassword.error = null
@@ -85,7 +93,8 @@ class SettingsActivity : AppCompatActivity() {
                 }
                 user.updateEmail(newEmail).addOnCompleteListener { upd ->
                     if (upd.isSuccessful) {
-                        Toast.makeText(this, "Email updated to $newEmail", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Email updated to $newEmail", Toast.LENGTH_SHORT)
+                            .show()
                         binding.tvEmail.text = getString(R.string.email_fmt, newEmail)
                         user.sendEmailVerification()
                     } else {
@@ -100,32 +109,73 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // === Preferences: notifications + language ===
-        val languages = listOf("English", "isiZulu", "Afrikaans")
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, languages)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spinnerLanguage.adapter = adapter
 
-        // Load saved prefs
+        // Notifications
         val notifOn = prefs.getBoolean("notifications", true)
-        val savedLang = prefs.getString("language", languages.first())
         binding.switchNotifications.isChecked = notifOn
-        binding.spinnerLanguage.setSelection(languages.indexOf(savedLang).coerceAtLeast(0))
-
-        // Persist changes immediately
         binding.switchNotifications.setOnCheckedChangeListener { _, isChecked ->
             prefs.edit().putBoolean("notifications", isChecked).apply()
         }
-        binding.spinnerLanguage.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                prefs.edit().putString("language", languages[position]).apply()
-                // TODO: apply runtime locale switch in POE (for now it's stored)
+
+        // Language: labels + ISO codes
+        val languageLabels = listOf("English", "isiZulu", "Afrikaans")
+        val languageCodes = listOf("en", "zu", "af")
+
+        val langAdapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            languageLabels
+        ).also {
+            it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+
+        binding.spinnerLanguage.adapter = langAdapter
+
+        // Load saved language code from LocaleManager
+        val savedCode = LocaleManager.getSavedLanguage(this)
+        val selectedIndex = languageCodes.indexOf(savedCode).takeIf { it >= 0 } ?: 0
+        binding.spinnerLanguage.setSelection(selectedIndex)
+
+        binding.spinnerLanguage.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    val selectedCode = languageCodes[position]
+
+                    // Save + apply language
+                    LocaleManager.saveLanguage(this@SettingsActivity, selectedCode)
+                    LocaleManager.setLocale(this@SettingsActivity, selectedCode)
+
+                    // Recreate to immediately update text
+                    recreate()
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    // no-op
+                }
             }
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+        // === Sync Now / Offline status ===
+        binding.btnSyncNow.setOnClickListener {
+            lifecycleScope.launch {
+                // Show that offline/sync mode is active
+                binding.tvOfflineStatus.text = getString(R.string.offline_mode_active)
+
+                // Simulate some sync work (network/db)
+                delay(1000)
+
+                // Mark as complete
+                binding.tvOfflineStatus.text = getString(R.string.sync_complete)
+                Toast.makeText(
+                    this@SettingsActivity,
+                    getString(R.string.sync_complete),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 

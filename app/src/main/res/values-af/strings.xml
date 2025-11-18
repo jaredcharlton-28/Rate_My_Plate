@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Rate My Plate</string>
+    <string name="title_activity_login">Meld aan</string>
+    <string name="title_activity_settings">Instellings</string>
+
+    <string name="welcome_default">Welkom</string>
+    <string name="welcome_fmt">Welkom %1$s</string>
+
+    <string name="settings">Instellings</string>
+    <string name="logout">Teken uit</string>
+    <string name="account_details">Rekeningbesonderhede</string>
+
+    <string name="uid_fmt">UID: %1$s</string>
+    <string name="email_fmt">E-pos: %1$s</string>
+    <string name="verified_fmt">Geverifieer: %1$s</string>
+    <string name="created_fmt">Geskep op: %1$s</string>
+    <string name="last_signin_fmt">Laaste aanmelding: %1$s</string>
+
+    <string name="change_email">Verander e-posadres</string>
+    <string name="new_email">Nuwe e-posadres</string>
+    <string name="current_password">Huidige wagwoord (veiligheid)</string>
+    <string name="update_email">Werk e-posadres by</string>
+
+    <string name="back">Terug</string>
+    <string name="enable_notifications">Aktiveer kennisgewings</string>
+    <string name="select_language">Kies taal</string>
+
+    <string name="browse_businesses">Bespaar restaurante</string>
+    <string name="title_activity_review">Resensie</string>
+    <string name="title_reviews_for">Resensies vir: %1$s</string>
+    <string name="no_reviews_yet">Geen resensies beskikbaar nie</string>
+
+    <string name="write_review">Skryf resensie</string>
+    <string name="title_activity_write_review">Skryf resensie</string>
+    <string name="review_posted">Resensie geplaas!</string>
+    <string name="please_give_rating">Gee asseblief ’n gradering</string>
+    <string name="please_write_comment">Skryf asseblief ’n opmerking</string>
+
+    <string name="no_businesses">Geen restaurante gevind nie</string>
+    <string name="hello_blank_fragment">Hallo</string>
+
+    <string name="title_activity_add_restaurant">Voeg restaurant by</string>
+    <string name="add_restaurant">Voeg restaurant by</string>
+
+    <string name="sync_now">Sinkroniseer nou</string>
+    <string name="offline_mode_active">Vanlyn modus aktief</string>
+    <string name="sync_complete">Sinkronisering voltooi</string>
+    <string name="offline_status_default">Vanlyn en sinkronisasie-instellings</string>
+</resources>
+

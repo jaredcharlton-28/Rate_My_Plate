@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Rate My Plate</string>
+    <string name="title_activity_login">Ukungena</string>
+    <string name="title_activity_settings">Izilungiselelo</string>
+
+    <string name="welcome_default">Siyakwamukela</string>
+    <string name="welcome_fmt">Siyakwamukela %1$s</string>
+
+    <string name="settings">Izilungiselelo</string>
+    <string name="logout">Phuma</string>
+    <string name="account_details">Imininingwane ye-akhawunti</string>
+
+    <string name="uid_fmt">I-UID: %1$s</string>
+    <string name="email_fmt">I-imeyili: %1$s</string>
+    <string name="verified_fmt">Iqinisekisiwe: %1$s</string>
+    <string name="created_fmt">Kwenziwe ngo: %1$s</string>
+    <string name="last_signin_fmt">Ukungena kokugcina: %1$s</string>
+
+    <string name="change_email">Shintsha i-imeyili</string>
+    <string name="new_email">I-imeyili entsha</string>
+    <string name="current_password">Iphasiwedi yamanje (yokuphepha)</string>
+    <string name="update_email">Buyekeza i-imeyili</string>
+
+    <string name="back">Emuva</string>
+    <string name="enable_notifications">Vumela izaziso</string>
+    <string name="select_language">Khetha ulimi</string>
+
+    <string name="browse_businesses">Bheka izindawo zokudlela</string>
+    <string name="title_activity_review">Ukubuyekeza</string>
+    <string name="title_reviews_for">Izibuyekezo: %1$s</string>
+    <string name="no_reviews_yet">Awekho amazwana okwamanje</string>
+
+    <string name="write_review">Bhala isibuyekezo</string>
+    <string name="title_activity_write_review">Bhala isibuyekezo</string>
+    <string name="review_posted">Isibuyekezo sithunyelwe!</string>
+    <string name="please_give_rating">Sicela unikeze isilinganiso</string>
+    <string name="please_write_comment">Sicela ubhale amazwana</string>
+
+    <string name="no_businesses">Azitholakalanga izindawo zokudlela</string>
+    <string name="hello_blank_fragment">Sawubona</string>
+
+    <string name="title_activity_add_restaurant">Nezela indawo yokudlela</string>
+    <string name="add_restaurant">Nezela indawo yokudlela</string>
+
+    <string name="sync_now">Bhangqisa manje</string>
+    <string name="offline_mode_active">Imodi engaxhunyiwe kwi-inthanethi iyasebenza</string>
+    <string name="sync_complete">Ukubhangqisa kuqediwe</string>
+    <string name="offline_status_default">Izilungiselelo zokusebenza ngaphandle kwe-inthanethi</string>
+</resources>
+
