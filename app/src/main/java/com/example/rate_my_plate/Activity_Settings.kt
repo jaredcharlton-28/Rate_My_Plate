@@ -24,6 +24,9 @@ class SettingsActivity : AppCompatActivity() {
     // simple local prefs for notification + (legacy) settings
     private val prefs by lazy { getSharedPreferences("user_settings", MODE_PRIVATE) }
 
+    // used to prevent spinner onItemSelected firing during initial setup
+    private var isLanguageInit = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingBinding.inflate(layoutInflater)
@@ -134,7 +137,12 @@ class SettingsActivity : AppCompatActivity() {
         // Load saved language code from LocaleManager
         val savedCode = LocaleManager.getSavedLanguage(this)
         val selectedIndex = languageCodes.indexOf(savedCode).takeIf { it >= 0 } ?: 0
-        binding.spinnerLanguage.setSelection(selectedIndex)
+
+        // Mark that we're in init phase before setting selection
+        isLanguageInit = true
+        binding.spinnerLanguage.setSelection(selectedIndex, false)
+        // After the next layout pass, we allow handling real user selections
+        binding.spinnerLanguage.post { isLanguageInit = false }
 
         binding.spinnerLanguage.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
@@ -144,14 +152,23 @@ class SettingsActivity : AppCompatActivity() {
                     position: Int,
                     id: Long
                 ) {
+                    // Ignore callbacks fired during initialization
+                    if (isLanguageInit) return
+
                     val selectedCode = languageCodes[position]
+
+                    // If user chose the same language, do nothing
+                    val current = LocaleManager.getSavedLanguage(this@SettingsActivity)
+                    if (selectedCode == current) return
 
                     // Save + apply language
                     LocaleManager.saveLanguage(this@SettingsActivity, selectedCode)
                     LocaleManager.setLocale(this@SettingsActivity, selectedCode)
 
-                    // Recreate to immediately update text
-                    recreate()
+                    // Recreate AFTER spinner popup has closed
+                    binding.spinnerLanguage.post {
+                        recreate()
+                    }
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
