@@ -1,0 +1,9 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- App theme using Material 3 -->
+    <style name="Theme.RateMyPlate" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Optional color overrides; you can leave these out to use defaults -->
+        <item name="colorPrimary">@android:color/holo_blue_dark</item>
+        <item name="colorSecondary">@android:color/holo_green_dark</item>
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
+    </style>
+</resources>
