@@ -48,10 +48,8 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener {
-            if (it.isSuccessful) goToHome()
-            else toast("Login failed: ${it.exception?.localizedMessage}")
-        }
+        // 🔒 NEW: go through biometrics
+        maybeBiometricThenLogin(email, pass)
     }
 
     private fun goToHome() {
@@ -61,4 +59,34 @@ class LoginActivity : AppCompatActivity() {
 
     private fun toast(msg: String) =
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+
+    private fun performLogin(email: String, pass: String) {
+        if (email.isBlank() || pass.isBlank()) {
+            toast("Email and password are required")
+            return
+        }
+
+        auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener {
+            if (it.isSuccessful) goToHome()
+            else toast("Login failed: ${it.exception?.localizedMessage}")
+        }
+    }
+
+    private fun maybeBiometricThenLogin(email: String, pass: String) {
+        if (!BiometricUtil.canUseBiometrics(this)) {
+            // Fallback: no biometrics on this device
+            performLogin(email, pass)
+            return
+        }
+
+        BiometricUtil.showBiometricPrompt(
+            activity = this,
+            onSuccess = {
+                performLogin(email, pass)
+            },
+            onError = { msg ->
+                toast(msg)
+            }
+        )
+    }
 }

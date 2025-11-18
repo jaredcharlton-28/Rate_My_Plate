@@ -83,6 +83,13 @@ dependencies {
     kapt ("com.github.bumptech.glide:compiler:4.15.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 
+    implementation("androidx.biometric:biometric:1.2.0-alpha05")
+
+    // Room (offline DB)
+    implementation("androidx.room:room-runtime:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+
 
 
 
