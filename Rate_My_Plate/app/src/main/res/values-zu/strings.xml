@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Linganisela Ipuleyiti</string>
+    <string name="write_review">Bhala Uhlolo</string>
+    <string name="choose_photo">Khetha Isithombe</string>
+    <string name="submit_review">Thumela Uhlolo</string>
+    <string name="rating_required">Sicela ubeke izinkanyezi</string>
+    <string name="comment_required">Sicela ubhale amazwana</string>
+    <string name="review_posted">Uhlolo luthunyelwe!</string>
+    <string name="review_saved_offline">Ungaxhunyiwe – Uhlolo lugcinwe.</string>
+    <string name="pending_sync">Kulindwe Ukuvumelanisa</string>
+</resources>
