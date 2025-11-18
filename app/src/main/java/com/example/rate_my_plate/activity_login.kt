@@ -1,5 +1,6 @@
 package com.example.rate_my_plate
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -11,6 +12,13 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private val auth by lazy { FirebaseAuth.getInstance() }
+
+    // Apply saved language to this Activity
+    override fun attachBaseContext(newBase: Context) {
+        val lang = LocaleManager.getSavedLanguage(newBase)
+        val wrapped = LocaleManager.setLocale(newBase, lang)
+        super.attachBaseContext(wrapped)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +56,7 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        // 🔒 NEW: go through biometrics
+        // 🔒 go through biometrics
         maybeBiometricThenLogin(email, pass)
     }
 

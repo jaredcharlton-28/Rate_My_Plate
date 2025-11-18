@@ -21,21 +21,28 @@ object LocaleManager {
         prefs.edit().putString(KEY_LANGUAGE_CODE, code).apply()
     }
 
+    /**
+     * Apply the given language to this context and return a wrapped context.
+     * Also updates the existing Resources so Activities using this context
+     * see the change.
+     */
     fun setLocale(context: Context, langCode: String): Context {
         val locale = Locale(langCode)
         Locale.setDefault(locale)
 
-        val res = context.resources
-        val config = Configuration(res.configuration)
+        val resources = context.resources
+        val config = Configuration(resources.configuration)
 
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             config.setLocale(locale)
+            // update current resources too
+            resources.updateConfiguration(config, resources.displayMetrics)
             context.createConfigurationContext(config)
         } else {
             @Suppress("DEPRECATION")
             config.locale = locale
             @Suppress("DEPRECATION")
-            res.updateConfiguration(config, res.displayMetrics)
+            resources.updateConfiguration(config, resources.displayMetrics)
             context
         }
     }

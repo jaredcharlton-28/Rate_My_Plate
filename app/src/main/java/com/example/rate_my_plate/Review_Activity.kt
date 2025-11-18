@@ -1,6 +1,6 @@
-// com/example/rate_my_plate/ui/review/ReviewsActivity.kt
 package com.example.rate_my_plate.ui.review
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
@@ -8,6 +8,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.rate_my_plate.LocaleManager
 import com.example.rate_my_plate.R
 import com.example.rate_my_plate.data.model.Review
 import com.example.rate_my_plate.databinding.ActivityReviewsBinding
@@ -31,6 +32,13 @@ class ReviewsActivity : AppCompatActivity() {
 
     private val restaurantId by lazy { intent.getStringExtra(EXTRA_RESTAURANT_ID) ?: "demo_restaurant" }
     private val restaurantName by lazy { intent.getStringExtra(EXTRA_RESTAURANT_NAME) ?: "Restaurant" }
+
+    // Apply saved language to this Activity
+    override fun attachBaseContext(newBase: Context) {
+        val lang = LocaleManager.getSavedLanguage(newBase)
+        val wrapped = LocaleManager.setLocale(newBase, lang)
+        super.attachBaseContext(wrapped)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

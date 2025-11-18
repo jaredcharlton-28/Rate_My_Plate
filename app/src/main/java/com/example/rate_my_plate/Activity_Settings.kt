@@ -1,5 +1,6 @@
 package com.example.rate_my_plate
 
+import android.content.Context
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.view.View
@@ -26,6 +27,13 @@ class SettingsActivity : AppCompatActivity() {
 
     // used to prevent spinner onItemSelected firing during initial setup
     private var isLanguageInit = true
+
+    // Apply saved language to this Activity
+    override fun attachBaseContext(newBase: Context) {
+        val lang = LocaleManager.getSavedLanguage(newBase)
+        val wrapped = LocaleManager.setLocale(newBase, lang)
+        super.attachBaseContext(wrapped)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -161,9 +169,8 @@ class SettingsActivity : AppCompatActivity() {
                     val current = LocaleManager.getSavedLanguage(this@SettingsActivity)
                     if (selectedCode == current) return
 
-                    // Save + apply language
+                    // Save new language; attachBaseContext will apply it on recreate
                     LocaleManager.saveLanguage(this@SettingsActivity, selectedCode)
-                    LocaleManager.setLocale(this@SettingsActivity, selectedCode)
 
                     // Recreate AFTER spinner popup has closed
                     binding.spinnerLanguage.post {
