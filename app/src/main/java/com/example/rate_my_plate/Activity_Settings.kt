@@ -202,7 +202,7 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
     }
-
+//
     private fun formatTs(ts: Long): String =
         if (ts <= 0L) "—" else DateFormat.format("yyyy-MM-dd HH:mm", Date(ts)).toString()
 }
