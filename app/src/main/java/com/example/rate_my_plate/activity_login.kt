@@ -86,7 +86,7 @@ class LoginActivity : AppCompatActivity() {
             performLogin(email, pass)
             return
         }
-
+//
         BiometricUtil.showBiometricPrompt(
             activity = this,
             onSuccess = {
