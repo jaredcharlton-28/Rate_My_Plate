@@ -1,5 +1,6 @@
 package com.example.rate_my_plate
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -17,10 +18,16 @@ class MainActivity : AppCompatActivity() {
     private var isAdmin: Boolean = false
 
     // Put your real UID(s) here EXACTLY as shown in Firebase Console
-    // Example: "E3q9X3m7abCDEFghiJKLmnOPQR2"
     private val adminUidAllowlist = setOf(
         "AGj6BGgYRygocFv8hjIgqpEZ6fR2"
     )
+
+    // Apply saved language to this Activity
+    override fun attachBaseContext(newBase: Context) {
+        val lang = LocaleManager.getSavedLanguage(newBase)
+        val wrapped = LocaleManager.setLocale(newBase, lang)
+        super.attachBaseContext(wrapped)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,8 +44,9 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        // Welcome text
-        binding.textViewWelcome.text = "Welcome ${user.displayName ?: user.email ?: "User"}"
+        // Localized welcome text using welcome_fmt
+        val displayName = user.displayName ?: user.email ?: "User"
+        binding.textViewWelcome.text = getString(R.string.welcome_fmt, displayName)
 
         // Logout
         binding.btnLogout.setOnClickListener {

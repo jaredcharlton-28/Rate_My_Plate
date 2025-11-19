@@ -36,4 +36,10 @@
 
     <string name="add_restaurant">Add restaurant</string>
 
+    <string name="sync_now">Sync now</string>
+    <string name="offline_mode_active">Offline mode active</string>
+    <string name="sync_complete">Sync complete</string>
+    <string name="offline_status_default">Offline and sync settings</string>
+
+
 </resources>

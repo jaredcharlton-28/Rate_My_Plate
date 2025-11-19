@@ -1,5 +1,6 @@
 package com.example.rate_my_plate
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -11,6 +12,13 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private val auth by lazy { FirebaseAuth.getInstance() }
+
+    // Apply saved language to this Activity
+    override fun attachBaseContext(newBase: Context) {
+        val lang = LocaleManager.getSavedLanguage(newBase)
+        val wrapped = LocaleManager.setLocale(newBase, lang)
+        super.attachBaseContext(wrapped)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,10 +56,8 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener {
-            if (it.isSuccessful) goToHome()
-            else toast("Login failed: ${it.exception?.localizedMessage}")
-        }
+        // 🔒 go through biometrics
+        maybeBiometricThenLogin(email, pass)
     }
 
     private fun goToHome() {
@@ -61,4 +67,34 @@ class LoginActivity : AppCompatActivity() {
 
     private fun toast(msg: String) =
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+
+    private fun performLogin(email: String, pass: String) {
+        if (email.isBlank() || pass.isBlank()) {
+            toast("Email and password are required")
+            return
+        }
+
+        auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener {
+            if (it.isSuccessful) goToHome()
+            else toast("Login failed: ${it.exception?.localizedMessage}")
+        }
+    }
+
+    private fun maybeBiometricThenLogin(email: String, pass: String) {
+        if (!BiometricUtil.canUseBiometrics(this)) {
+            // Fallback: no biometrics on this device
+            performLogin(email, pass)
+            return
+        }
+
+        BiometricUtil.showBiometricPrompt(
+            activity = this,
+            onSuccess = {
+                performLogin(email, pass)
+            },
+            onError = { msg ->
+                toast(msg)
+            }
+        )
+    }
 }

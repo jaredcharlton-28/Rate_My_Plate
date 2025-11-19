@@ -1,10 +1,12 @@
 package com.example.rate_my_plate.ui.business
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.rate_my_plate.LocaleManager
 import com.example.rate_my_plate.R
 import com.example.rate_my_plate.data.model.Business
 import com.example.rate_my_plate.ui.review.ReviewsActivity
@@ -13,6 +15,13 @@ class BusinessListActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: BusinessAdapter
+
+    // Apply saved language to this Activity
+    override fun attachBaseContext(newBase: Context) {
+        val lang = LocaleManager.getSavedLanguage(newBase)
+        val wrapped = LocaleManager.setLocale(newBase, lang)
+        super.attachBaseContext(wrapped)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

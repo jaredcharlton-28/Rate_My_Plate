@@ -1,11 +1,13 @@
 package com.example.rate_my_plate.ui.business
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.rate_my_plate.LocaleManager
 import com.example.rate_my_plate.R
 import com.example.rate_my_plate.data.repository.BusinessRepository
 import kotlinx.coroutines.CoroutineScope
@@ -13,6 +15,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class AddRestaurantActivity : AppCompatActivity() {
+
+    // Apply saved language to this Activity
+    override fun attachBaseContext(newBase: Context) {
+        val lang = LocaleManager.getSavedLanguage(newBase)
+        val wrapped = LocaleManager.setLocale(newBase, lang)
+        super.attachBaseContext(wrapped)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_restaurant)
@@ -41,10 +51,17 @@ class AddRestaurantActivity : AppCompatActivity() {
 
             CoroutineScope(Dispatchers.Main).launch {
                 try {
-                    Log.d("AddRestaurant", "Create -> name=$name, category=$cat, desc=$desc, thumb=$thumb")
+                    Log.d(
+                        "AddRestaurant",
+                        "Create -> name=$name, category=$cat, desc=$desc, thumb=$thumb"
+                    )
                     val resp = BusinessRepository().createBusiness(name, cat, desc, thumb)
                     if (resp.isSuccessful) {
-                        Toast.makeText(this@AddRestaurantActivity, "Added!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@AddRestaurantActivity,
+                            "Added!",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         setResult(RESULT_OK); finish()
                     } else {
                         val err = resp.errorBody()?.string()
@@ -57,10 +74,18 @@ class AddRestaurantActivity : AppCompatActivity() {
                     }
                 } catch (e: Exception) {
                     Log.e("AddRestaurant", "Exception creating business", e)
-                    Toast.makeText(this@AddRestaurantActivity, e.message ?: "Error", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@AddRestaurantActivity,
+                        e.message ?: "Error",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }
     }
-    override fun onSupportNavigateUp(): Boolean { finish(); return true }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
+    }
 }
