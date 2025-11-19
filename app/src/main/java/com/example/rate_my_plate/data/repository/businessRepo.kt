@@ -1,12 +1,22 @@
 package com.example.rate_my_plate.data.repository
 
 import android.util.Log
+import com.example.rate_my_plate.RateMyPlateApp
 import com.example.rate_my_plate.data.api.ApiClient
 import com.example.rate_my_plate.data.api.BusinessCreateRequest
+import com.example.rate_my_plate.data.local.AppDatabase
+import com.example.rate_my_plate.data.local.BusinessEntity
 import com.example.rate_my_plate.data.model.Business
 import retrofit2.Response
 
-class BusinessRepository {
+data class CachedBusinesses(
+    val businesses: List<Business>,
+    val fromCache: Boolean
+)
+
+class BusinessRepository(
+    private val db: AppDatabase = AppDatabase.get(RateMyPlateApp.instance)
+) {
 
     private val service = ApiClient.service
 
@@ -15,6 +25,24 @@ class BusinessRepository {
         category: String? = null,
         rating: Float? = null
     ): Response<List<Business>> = service.getBusinesses(q, category, rating)
+
+    suspend fun getBusinessesWithCache(): CachedBusinesses {
+        return try {
+            val resp = getBusinesses()
+            if (resp.isSuccessful) {
+                val network = resp.body().orEmpty()
+                db.businessDao().clearAll()
+                db.businessDao().insertAll(network.map(BusinessEntity::fromBusiness))
+                CachedBusinesses(network, fromCache = false)
+            } else {
+                val cached = db.businessDao().getAll().map { it.toBusiness() }
+                CachedBusinesses(cached, fromCache = true)
+            }
+        } catch (_: Exception) {
+            val cached = db.businessDao().getAll().map { it.toBusiness() }
+            CachedBusinesses(cached, fromCache = true)
+        }
+    }
 
     suspend fun createBusiness(
         name: String,

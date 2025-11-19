@@ -4,7 +4,8 @@
     package="com.example.rate_my_plate">
     <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
-//
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <application
         android:name=".RateMyPlateApp"
         android:allowBackup="true"
@@ -56,6 +57,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".notifications.ReviewMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

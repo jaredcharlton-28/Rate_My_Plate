@@ -46,6 +46,15 @@
     <string name="sync_now">Sinkroniseer nou</string>
     <string name="offline_mode_active">Vanlyn modus aktief</string>
     <string name="sync_complete">Sinkronisering voltooi</string>
+    <string name="sync_success_count">%1$d hangende resensies gesinkroniseer</string>
+    <string name="sync_partial">%1$d gesinkroniseer, %2$d het misluk</string>
+    <string name="sync_nothing_pending">Geen hangende resensies om te sinkroniseer nie</string>
     <string name="offline_status_default">Vanlyn en sinkronisasie-instellings</string>
+    <string name="offline_cached_businesses">Vanlyn – toon gestoorde besighede</string>
+    <string name="pending_upload_label">Hangende oplaai</string>
+    <string name="upload_failed_fallback">Oplaai het misluk. Dien in sonder foto.</string>
+    <string name="notification_new_review_title">Nuwe resensie geplaas</string>
+    <string name="notification_new_review_body">'n Nuwe resensie is bygevoeg.</string>
+    <string name="notification_channel_name">Resensies</string>
 </resources>
 

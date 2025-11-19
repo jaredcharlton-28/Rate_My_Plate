@@ -10,10 +10,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.rate_my_plate.databinding.ActivitySettingBinding
+import com.example.rate_my_plate.data.local.AppDatabase
+import com.example.rate_my_plate.data.local.ReviewEntity
+import com.example.rate_my_plate.data.repository.ReviewRepository
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Date
 
@@ -21,6 +23,8 @@ class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingBinding
     private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
+    private val reviewDao by lazy { AppDatabase.get(applicationContext).reviewDao() }
+    private val reviewRepository = ReviewRepository()
 
     // simple local prefs for notification + (legacy) settings
     private val prefs by lazy { getSharedPreferences("user_settings", MODE_PRIVATE) }
@@ -189,16 +193,39 @@ class SettingsActivity : AppCompatActivity() {
                 // Show that offline/sync mode is active
                 binding.tvOfflineStatus.text = getString(R.string.offline_mode_active)
 
-                // Simulate some sync work (network/db)
-                delay(1000)
+                val pending = reviewDao.getPendingUploads()
+                var successCount = 0
+                var failureCount = 0
 
-                // Mark as complete
-                binding.tvOfflineStatus.text = getString(R.string.sync_complete)
-                Toast.makeText(
-                    this@SettingsActivity,
-                    getString(R.string.sync_complete),
-                    Toast.LENGTH_SHORT
-                ).show()
+                for (entity in pending) {
+                    try {
+                        val response = reviewRepository.postReview(entity.toReview())
+                        if (response.isSuccessful) {
+                            val body = response.body()
+                            if (body != null) {
+                                reviewDao.deleteById(entity.localId)
+                                reviewDao.insert(ReviewEntity.fromReview(body, pending = false))
+                                successCount++
+                            } else {
+                                failureCount++
+                            }
+                        } else {
+                            failureCount++
+                        }
+                    } catch (e: Exception) {
+                        failureCount++
+                    }
+                }
+
+                val statusText = when {
+                    pending.isEmpty() -> getString(R.string.sync_nothing_pending)
+                    failureCount == 0 -> getString(R.string.sync_success_count, successCount)
+                    else -> getString(R.string.sync_partial, successCount, failureCount)
+                }
+
+                binding.tvOfflineStatus.text = statusText
+
+                Toast.makeText(this@SettingsActivity, statusText, Toast.LENGTH_SHORT).show()
             }
         }
     }

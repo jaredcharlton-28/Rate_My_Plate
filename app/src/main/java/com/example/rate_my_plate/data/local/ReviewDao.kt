@@ -22,4 +22,7 @@ interface ReviewDao {
 
     @Query("SELECT * FROM reviews WHERE pendingUpload = 1")
     suspend fun getPendingUploads(): List<ReviewEntity>
+
+    @Query("DELETE FROM reviews WHERE localId = :localId")
+    suspend fun deleteById(localId: Long)
 }

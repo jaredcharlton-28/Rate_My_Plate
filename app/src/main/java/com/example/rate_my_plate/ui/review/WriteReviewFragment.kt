@@ -1,7 +1,7 @@
 package com.example.rate_my_plate.ui.review
 
-import android.app.Activity.RESULT_OK
 import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -15,7 +15,12 @@ import com.bumptech.glide.Glide
 import com.example.rate_my_plate.R
 import com.example.rate_my_plate.data.model.Review
 import com.example.rate_my_plate.vm.ReviewViewModel
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class WriteReviewFragment : Fragment(R.layout.fragment_write_review) {
 
@@ -76,16 +81,44 @@ class WriteReviewFragment : Fragment(R.layout.fragment_write_review) {
             val restaurantId = arguments?.getString("restaurantId") ?: "demo_restaurant"
             val userId = "demo_user" // replace with FirebaseAuth uid if you have auth
 
-            val review = Review(
-                restaurantId = restaurantId,
-                userId = userId,
-                userName = "Teshar",
-                rating = rating,
-                comment = comment,
-                imageUrl = selectedImageUri?.toString()
-            )
+            lifecycleScope.launch {
+                btnSubmit.isEnabled = false
+                try {
+                    val imageUrl = uploadImageIfNeeded()
 
-            lifecycleScope.launch { vm.postReview(review) }
+                    val review = Review(
+                        restaurantId = restaurantId,
+                        userId = userId,
+                        userName = "Teshar",
+                        rating = rating,
+                        comment = comment,
+                        imageUrl = imageUrl
+                    )
+
+                    vm.postReview(review)
+                } finally {
+                    btnSubmit.isEnabled = true
+                }
+            }
+        }
+    }
+
+    private suspend fun uploadImageIfNeeded(): String? {
+        val uri = selectedImageUri ?: return null
+        return try {
+            val storageRef = Firebase.storage.reference
+                .child("reviews/${System.currentTimeMillis()}_${uri.lastPathSegment ?: "photo"}.jpg")
+            storageRef.putFile(uri).await()
+            storageRef.downloadUrl.await().toString()
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.upload_failed_fallback),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            null
         }
     }
 
