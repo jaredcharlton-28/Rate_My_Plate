@@ -26,7 +26,8 @@ data class ReviewEntity(
         rating = rating,
         comment = comment,
         imageUrl = imageUrl,
-        ownerResponse = ownerResponse
+        ownerResponse = ownerResponse,
+        pendingUpload = pendingUpload
     )
 
     companion object {

@@ -50,5 +50,11 @@
     <string name="sync_partial">Kuvumelaniswe okungu-%1$d, okungu-%2$d kuhlulekile</string>
     <string name="sync_nothing_pending">Azikho izibuyekezo ezimilindile zokuvumelanisa</string>
     <string name="offline_status_default">Izilungiselelo zokusebenza ngaphandle kwe-inthanethi</string>
+    <string name="offline_cached_businesses">Aku-inthanethi – kukhonjiswa amabhizinisi alondoloziwe</string>
+    <string name="pending_upload_label">Iya kulayishwa</string>
+    <string name="upload_failed_fallback">Ukulayisha kwehlulekile. Thumela ngaphandle kwesithombe.</string>
+    <string name="notification_new_review_title">Kukhishiwe ukubuyekeza okusha</string>
+    <string name="notification_new_review_body">Kunezinye izibuyekezo ezingeziwe.</string>
+    <string name="notification_channel_name">Izibuyekezo</string>
 </resources>
 
