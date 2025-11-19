@@ -10,14 +10,14 @@ The project includes:
 
 ## Features
 
-### 🍽 Core App Features
+### Core App Features
 - Rate dishes using a 1–5 star system
 - Write detailed reviews with photos
 - Browse recent or top-rated dishes
 - Explore restaurants and items
 - Search/filter by restaurant, tag, rating, or dish type
 
-### 🔐 Authentication
+### Authentication
 - **Firebase Authentication**
   - Email & Password
   - Google Sign-In (optional)
@@ -27,13 +27,13 @@ The project includes:
   - Face Unlock
   - Device PIN/Pattern fallback
 
-### 📸 Media & Storage
+###  Media & Storage
 - Capture photos using the camera
 - Select photos from the gallery
 - Image preview before posting
 - Efficient caching (Coil/Glide)
 
-### 🌐 Backend Integration
+###  Backend Integration
 - Lightweight Node.js API
 - JSON-based database (`db.json`)
 - Hot reload via Nodemon
