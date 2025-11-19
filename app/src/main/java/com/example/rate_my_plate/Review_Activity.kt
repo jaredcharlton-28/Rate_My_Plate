@@ -1,18 +1,23 @@
 package com.example.rate_my_plate.ui.review
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.rate_my_plate.LocaleManager
 import com.example.rate_my_plate.R
 import com.example.rate_my_plate.data.model.Review
 import com.example.rate_my_plate.databinding.ActivityReviewsBinding
+import com.example.rate_my_plate.notifications.ReviewMessagingService
 import com.example.rate_my_plate.vm.ReviewViewModel
+import com.google.android.material.snackbar.Snackbar
 
 class ReviewsActivity : AppCompatActivity() {
 
@@ -24,6 +29,20 @@ class ReviewsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityReviewsBinding
     private lateinit var vm: ReviewViewModel
     private lateinit var adapter: ReviewAdapter
+    private lateinit var broadcastManager: LocalBroadcastManager
+    private val notificationReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val businessId = intent?.getStringExtra(ReviewMessagingService.EXTRA_BUSINESS_ID)
+            if (businessId == restaurantId) {
+                vm.loadReviews(restaurantId)
+                Snackbar.make(
+                    binding.root,
+                    R.string.notification_new_review_body,
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
 
     // Listen for write-review result and refresh on return
     private val writeReviewLauncher = registerForActivityResult(
@@ -50,6 +69,7 @@ class ReviewsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         vm = ViewModelProvider(this)[ReviewViewModel::class.java]
+        broadcastManager = LocalBroadcastManager.getInstance(this)
 
         adapter = ReviewAdapter(emptyList())
         binding.rvReviews.layoutManager = LinearLayoutManager(this)
@@ -70,6 +90,19 @@ class ReviewsActivity : AppCompatActivity() {
         }
 
         vm.loadReviews(restaurantId)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        broadcastManager.registerReceiver(
+            notificationReceiver,
+            IntentFilter(ReviewMessagingService.ACTION_REVIEW_UPDATE)
+        )
+    }
+
+    override fun onStop() {
+        super.onStop()
+        broadcastManager.unregisterReceiver(notificationReceiver)
     }
 
     // Handle the Up button (action bar back)

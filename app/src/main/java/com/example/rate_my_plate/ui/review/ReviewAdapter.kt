@@ -28,6 +28,7 @@ class ReviewAdapter(
         val tvRating: TextView = view.findViewById(R.id.tvRating)
         val tvComment: TextView = view.findViewById(R.id.tvComment)
         val tvOwnerResponse: TextView = view.findViewById(R.id.tvOwnerResponse)
+        val tvPending: TextView = view.findViewById(R.id.tvPending)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
@@ -49,6 +50,8 @@ class ReviewAdapter(
         // Text fields
         holder.tvRating.text = "★ ${r.rating}"
         holder.tvComment.text = r.comment
+        holder.tvPending.visibility = if (r.pendingUpload) View.VISIBLE else View.GONE
+        holder.tvComment.alpha = if (r.pendingUpload) 0.7f else 1f
 
         // Owner response
         if (!r.ownerResponse.isNullOrEmpty()) {

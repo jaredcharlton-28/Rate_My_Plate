@@ -8,5 +8,6 @@ data class Review(
     val rating: Float,
     val comment: String,
     val imageUrl: String? = null,
-    val ownerResponse: String? = null   // <- must be nullable (you use isNullOrEmpty())
+    val ownerResponse: String? = null,  // <- must be nullable (you use isNullOrEmpty())
+    val pendingUpload: Boolean = false
 )
