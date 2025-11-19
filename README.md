@@ -1,62 +1,198 @@
-# Rate My Plate 
+# Rate My Plate
 
-An Android app (Kotlin) for sharing and rating dishes. Snap a photo, jot a review, and help others discover their next favorite plate.
+Rate My Plate is an Android app (Kotlin) for sharing, reviewing, and rating dishes from restaurants. Snap a photo, write a review, browse popular plates, and help others discover their next favorite meal.
 
+The project includes:
+- A full Android application built using modern development standards.
+- A lightweight Node.js JSON API for storing reviews, restaurants, and user data.
 
 ---
 
 ## Features
 
-- Rate dishes with stars and short reviews
-- Attach photos of plates you’ve tried
-- Browse recent and top-rated stores
-- Search/filter by restaurant, tag, or rating
-- Sign-in for syncing favorites & reviews
+### 🍽 Core App Features
+- Rate dishes using a 1–5 star system
+- Write detailed reviews with photos
+- Browse recent or top-rated dishes
+- Explore restaurants and items
+- Search/filter by restaurant, tag, rating, or dish type
 
+### 🔐 Authentication
+- **Firebase Authentication**
+  - Email & Password
+  - Google Sign-In (optional)
+  - Secure session persistence
+- **Biometric Sign-In**
+  - Fingerprint
+  - Face Unlock
+  - Device PIN/Pattern fallback
+
+### 📸 Media & Storage
+- Capture photos using the camera
+- Select photos from the gallery
+- Image preview before posting
+- Efficient caching (Coil/Glide)
+
+### 🌐 Backend Integration
+- Lightweight Node.js API
+- JSON-based database (`db.json`)
+- Hot reload via Nodemon
+- Endpoints for reviews, stores, users
 
 ---
 
+## Tech Stack
 
-## Getting started
+### Android App
+- Kotlin
+- MVVM Architecture
+- Jetpack Compose / XML
+- Retrofit + OkHttp + Coroutines
+- Hilt (dependency injection)
+- Coil / Glide (image loading)
+- DataStore / Room (local storage)
+- Firebase Auth
+- AndroidX Biometric API
+
+### Backend API
+- Node.js
+- JSON Server
+- Nodemon
+- db.json for data persistence
+
+---
+
+## Getting Started
 
 ### Prerequisites
-- Android Studio (Giraffe+ recommended)
-- JDK 17 (use Android Studio’s bundled JDK if possible)
-- Android SDK with latest stable compileSdk and build tools
 
-### Clone
+#### Android
+- Android Studio **Giraffe+**
+- JDK **17**
+- Latest `compileSdk` + build tools
+
+#### Backend
+- Node.js **18+**
+- npm or yarn
+
+---
+
+## Clone the Repository
+
 ```bash
 git clone https://github.com/jaredcharlton-28/Rate_My_Plate.git
 cd Rate_My_Plate
 ```
 
-### Open
-- Open the project in Android Studio (use the top-level build.gradle.kts).
-- Let Gradle sync and download dependencies.
+---
+
+## Opening the Project (Android)
+
+1. Open **Android Studio**
+2. Select: **Open an Existing Project**
+3. Choose the project root
+4. Let Gradle sync automatically
+5. Add your `google-services.json` into `app/google-services.json`
 
 ---
 
-## Build & run
+## Biometric Sign-In
 
-### From Android Studio
-- Select a device/emulator.
-- Click Run ▶️.
+The app supports:
+- Fingerprint
+- Face Unlock
+- Device Credentials
 
-### From the command line
+No additional setup required.
+
+---
+
+## Configure API URL
+
+Set the API base URL:
+
+```kotlin
+buildConfigField("String", "BASE_URL", ""http://10.0.2.2:3000/"")
+```
+
+For real devices, replace with your computer’s LAN IP.
+
+---
+
+## Build & Run
+
+### Android Studio
+- Select a device or emulator
+- Press **Run ▶️**
+
+### Command Line
+
 ```bash
-# Debug build
 ./gradlew assembleDebug
-
-# Install on a connected device
 ./gradlew installDebug
-
-# Release build (configure signing first)
 ./gradlew assembleRelease
 ```
 
 ---
 
-## Project structure
+## Backend API Setup
+
+```bash
+cd review-api
+npm install
+npm start
+```
+
+Server runs at:
+
+```
+http://localhost:3000/
+```
+
+---
+
+## API Endpoints
+
+### Reviews
+```
+GET    /reviews
+POST   /reviews
+GET    /reviews/:id
+PATCH  /reviews/:id
+DELETE /reviews/:id
+```
+
+### Stores
+```
+GET    /stores
+POST   /stores
+```
+
+### Users
+```
+GET    /users
+POST   /users
+```
+
+---
+
+## Example Review JSON
+
+```json
+{
+  "id": 12,
+  "rating": 5,
+  "comment": "Amazing sushi, super fresh!",
+  "photoUrl": "/images/sushi.jpg",
+  "storeId": 3,
+  "userId": 4,
+  "timestamp": "2025-02-12T18:00:00Z"
+}
+```
+
+---
+
+## Project Structure
 
 ```
 Rate_My_Plate/
@@ -64,24 +200,71 @@ Rate_My_Plate/
 │  ├─ src/
 │  │  ├─ main/
 │  │  │  ├─ AndroidManifest.xml
-│  │  │  ├─ java/...              # Kotlin source
-│  │  │  └─ res/...               # Layouts, drawables, strings
-│  │  └─ test/ ...                # Unit tests
+│  │  │  ├─ java/...       # ViewModels, UI, Repositories
+│  │  │  └─ res/...        # Layouts, images, strings
+│  │  └─ test/...          # Unit tests
 │  └─ build.gradle.kts
-├─ gradle/ ...                    # Gradle wrapper files
-├─ build.gradle.kts               # Root Gradle config
-├─ settings.gradle.kts            # Module inclusion
-└─ gradle.properties              # JVM/Gradle settings
+│
+├─ review-api/
+│  ├─ db.json              # Mock data storage
+│  ├─ server.js            # JSON server setup
+│  └─ package.json
+│
+├─ gradle/
+├─ build.gradle.kts
+├─ settings.gradle.kts
+└─ gradle.properties
 ```
 
+---
 
-## Configuration
+## Configuration Notes
 
-Create or update these files as needed:
+- **local.properties** → SDK paths
+- **gradle.properties** → JVM/Gradle flags
+- **strings.xml** → UI text
+- **BuildConfig** → API endpoints, keys
 
-- local.properties — SDK paths (managed by Android Studio)
-- gradle.properties — JVM/Gradle flags
-- app/src/main/res/values/strings.xml — app name & strings
-- BuildConfig fields — API keys or endpoints 
+---
+
+## Architecture
+
+### MVVM Breakdown
+
+**View Layer (Compose/XML)**  
+- Renders UI  
+- Observes state  
+
+**ViewModel Layer**  
+- Holds UI state  
+- Business logic  
+- Repository communication  
+
+**Repository Layer**  
+- API calls  
+- Firebase auth  
+- Local persistence  
+
+---
+
+## Security Notes
+- Firebase handles credentials securely
+- No raw passwords stored in the app
+- Biometric data is device-controlled
+- HTTPS recommended for production
+- JSON Server is dev/testing only
+
+---
+
+## Testing
+
+### App Testing
+- JUnit
+- Espresso / Compose Test
+
+### API Testing
+```bash
+curl http://localhost:3000/reviews
+```
 
 ---
