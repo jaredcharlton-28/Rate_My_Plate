@@ -46,6 +46,9 @@
     <string name="sync_now">Bhangqisa manje</string>
     <string name="offline_mode_active">Imodi engaxhunyiwe kwi-inthanethi iyasebenza</string>
     <string name="sync_complete">Ukubhangqisa kuqediwe</string>
+    <string name="sync_success_count">Kuvumelaniswe izibuyekezo ezingu-%1$d ezimilindile</string>
+    <string name="sync_partial">Kuvumelaniswe okungu-%1$d, okungu-%2$d kuhlulekile</string>
+    <string name="sync_nothing_pending">Azikho izibuyekezo ezimilindile zokuvumelanisa</string>
     <string name="offline_status_default">Izilungiselelo zokusebenza ngaphandle kwe-inthanethi</string>
 </resources>
 
